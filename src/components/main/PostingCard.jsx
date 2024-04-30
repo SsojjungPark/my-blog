@@ -1,20 +1,45 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const PostingCard = ({ post }) => {
+  const navigation = useNavigate();
+
+  const [heartCnt, setHeartCnt] = useState(post.starCnt);
+  const [isBookmark, setIsBookmark] = useState(false);
+
+  const clickPostingCard = () => {
+    navigation(`/post/${post.postingID}`, { state: "aaa" });
+  };
+
+  const clickHeart = () => {
+    if (isBookmark === true) {
+      setHeartCnt(heartCnt - 1);
+    } else {
+      setHeartCnt(heartCnt + 1);
+    }
+    setIsBookmark(!isBookmark);
+  };
+
   return (
     <div className="postingCard">
       <div className="postingHeader">
-        <img src={post.homePostingUser.profileImageURL} alt="user" width={10} />
+        <img src={post.homePostingUser.profileImageURL} alt="user" />
         <span>{post.homePostingUser.nickname}</span>
       </div>
-      <div className="postingBody">
+      <div className="postingBody" onClick={clickPostingCard}>
         <img
           src={post.thumbnailImageURL || "https://source.unsplash.com/random"}
           alt="img"
         />
         <p className="title">{post.title}</p>
-        <p className="htmlContent">{post.htmlContent.slice(0, 10)}</p>
+        <p className="htmlContent">{post.htmlContent.slice(0, 50)}</p>
       </div>
       <div className="postingFooter">
-        <span>하트{post.starCnt}</span>
+        <span
+          onClick={clickHeart}
+          style={{ color: isBookmark === true ? "#e76464" : "#3f3f3f" }}>
+          ♥ {heartCnt}
+        </span>
       </div>
     </div>
   );
